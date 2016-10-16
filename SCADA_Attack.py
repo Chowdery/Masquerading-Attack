@@ -2,7 +2,8 @@
 #IFN701 - Network Attack Dataset (Masquerading Attack)
 
 from Conveyor_Belt import*
-
+from WaterTank import*
+from Reactor import*
 from Directory import *
 
 
@@ -12,14 +13,48 @@ def Restart(device):
     device.client.destroy()
     time.sleep(5)
     try:
-        device = ConveyorBelt()
-        print "Reconnected to Conveyor Belt\n"
+        if target == "1":
+            device = ConveyorBelt()
+            print "Reconnected to Conveyor Belt\n"
+        elif target == "2":
+            device = WaterTank()
+            print "Reconnected to Water Tank\n"
+        elif target == "3":
+            device = Reactor()
+        print "Reconnected to Reactor\n"
+
         return device
+
     except Snap7Exception:
         print "\nCould not connect to victim. Terminating application!"
 
 try:
-    victim = ConveyorBelt()
+    target_chosen = False
+    target = "0"
+
+    while (not target_chosen):
+        print "\nAVAILABLE TARGETS\n"
+        print "1: Conveyor Belt"
+        print "2: Water Tank"
+        print "3: Reactor"
+        target = raw_input("Please select a target system...")
+
+        if target == "1":
+            victim = ConveyorBelt()
+            target_chosen = True
+
+        elif target == "2":
+            victim = WaterTank()
+            target_chosen = True
+
+        elif target == "3":
+            victim = Reactor()
+            target_chosen = True
+
+        else:
+            print "Please choose a valid option"
+
+
 
     while (victim.run):
 
@@ -28,18 +63,8 @@ try:
 
         victim.PrintOptions()
         victim.CheckStatus()
+        victim.LaunchAttack()
 
-        if victim.option == 0:
-            victim.MotorOn()
-
-        if victim.option == 1:
-            victim.MotorOff()
-
-        elif victim.option == 3:
-            victim.AltTestFlopgateLeft()
-
-        elif victim.option == 99:
-            victim.PrintStatus()
 
         #elif victim.option == 2:
         #    victim.SetFlopgateRight()
@@ -64,7 +89,6 @@ try:
 
         #elif victim.option == 10:
         #    victim.AltToggleMotor()
-
 
 
 

@@ -1,4 +1,4 @@
-#Daniel J. Cowdery
+#Daniel J. Cowdery - 2016
 #IFN701 - Network Attack Dataset (Masquerading Attack)
 
 import snap7
