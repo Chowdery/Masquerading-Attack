@@ -1,0 +1,248 @@
+boris@sef-lab-070958:~/PycharmProjects/Masquerading_Attack_Test$ sudo python SCADA_Attack.py 
+[sudo] password for boris: 
+
+AVAILABLE TARGETS
+
+1: Conveyor Belt
+2: Water Tank
+3: Reactor
+Please select a target system...1
+Connected to Conveyor Belt
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 4
+2016-10-09 16:57:43.535694 FlopgateLeft START
+Setting Flopgate Left
+2016-10-09 16:57:43.542232 FlopgateLeft END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 4
+2016-10-09 16:58:37.597854 FlopgateLeft START
+Setting Flopgate Left
+2016-10-09 16:58:37.603297 FlopgateLeft END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 4
+2016-10-09 16:59:31.367007 FlopgateLeft START
+Setting Flopgate Left
+2016-10-09 16:59:31.373513 FlopgateLeft END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 4
+2016-10-09 17:00:25.438772 FlopgateLeft START
+Setting Flopgate Left
+2016-10-09 17:00:25.445154 FlopgateLeft END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 4
+2016-10-09 17:01:20.006117 FlopgateLeft START
+Setting Flopgate Left
+2016-10-09 17:01:20.012588 FlopgateLeft END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 2
+2016-10-09 17:06:29.458369 MotorOff START
+Turning Motor Off...
+2016-10-09 17:06:29.464862 MotorOff END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 5
+2016-10-09 17:12:13.920501 FloodFlopgateLeft START
+Flooding Flopgate Left
+^C2016-10-09 17:16:25.466864 FloodFlopgateLeft END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 0
+2016-10-09 17:25:02.406067 MotorOn START
+Turning Motor On...
+2016-10-09 17:25:02.411504 MotorOn END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 0
+2016-10-09 17:25:10.502092 MotorOn START
+Turning Motor On...
+2016-10-09 17:25:10.508555 MotorOn END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 0
+2016-10-09 17:25:14.348987 MotorOn START
+Turning Motor On...
+2016-10-09 17:25:14.354422 MotorOn END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 0
+2016-10-09 17:25:15.776002 MotorOn START
+Turning Motor On...
+2016-10-09 17:25:15.781459 MotorOn END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 0
+2016-10-09 17:25:16.814809 MotorOn START
+Turning Motor On...
+2016-10-09 17:25:16.821314 MotorOn END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 0
+2016-10-09 17:25:19.806674 MotorOn START
+Turning Motor On...
+2016-10-09 17:25:19.813162 MotorOn END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 1
+2016-10-09 17:25:50.325713 FloodMotorOn START
+Flooding Motor On...
+^C2016-10-09 17:25:55.316371 FloodMotorOn END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 3
+2016-10-09 17:27:26.947995 FloodMotorOff START
+Flooding Motor Off...
+^C2016-10-09 17:36:19.490004 FloodMotorOff END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... 1
+2016-10-09 17:39:26.152358 FloodMotorOn START
+Flooding Motor On...
+^C2016-10-09 17:42:44.711656 FloodMotorOn END
+
+ATTACK OPTIONS
+0:   Turn Motor On
+1:   Flood Motor On
+2:   Turn Motor Off
+3    Flood Motor Off
+4:   Set Flopgate Left
+5:   Flood Flopgate Left
+99: Display System Status
+
+Select an action to perform... ^C
+Terminating application...
+Logs saved in Test_Log_File.log
+
